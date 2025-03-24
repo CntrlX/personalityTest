@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI Personality Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>MBTI Personality Test</h1>
+            <p class="subtitle">Discover your personality type through conversation</p>
+        </header>
+
+        <main>
+            <div class="chat-container">
+                <div id="chat-messages" class="chat-messages">
+                    <!-- Messages will appear here -->
+                </div>
+                
+                <div class="chat-input-container">
+                    <input type="text" id="user-input" placeholder="Type your answer here..." autocomplete="off">
+                    <button id="send-button">
+                        <span class="send-icon">→</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="result-container" class="result-container hidden">
+                <h2>Your Results</h2>
+                <div id="mbti-result"></div>
+                <a href="/" class="restart-button">Take Test Again</a>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2023 MBTI Personality Test | Powered by Langchain</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html> 
