@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const sendButton = document.getElementById('send-button');
     const resultContainer = document.getElementById('result-container');
     const mbtiResult = document.getElementById('mbti-result');
+    const voiceToggle = document.getElementById('voice-toggle');
+    const voiceIndicator = document.getElementById('voice-indicator');
+    const recommendations = document.getElementById('recommendations');
+    
+    // Voice state
+    let isVoiceActive = false;
     
     // Connect to Socket.IO server
     const socket = io();
@@ -19,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sendMessage();
         }
     });
+    
+    voiceToggle.addEventListener('click', toggleVoice);
     
     // Functions
     function init() {
@@ -81,6 +89,73 @@ document.addEventListener('DOMContentLoaded', () => {
         mbtiResult.innerHTML = formatBotMessage(resultContent);
         document.querySelector('.chat-container').classList.add('hidden');
         resultContainer.classList.remove('hidden');
+        
+        // Format and display recommendations
+        const recommendationsMatch = resultContent.match(/🎯.*?recommendations.*?\n\n([\s\S]*?)(?=\n\nRemember|$)/i);
+        if (recommendationsMatch) {
+            const recommendationsContent = recommendationsMatch[1];
+            displayRecommendations(recommendationsContent);
+        }
+    }
+    
+    function displayRecommendations(content) {
+        // Clear previous recommendations
+        recommendations.innerHTML = '';
+        
+        // Create categories
+        const categories = ['Music', 'Books', 'Movies'];
+        categories.forEach(category => {
+            const categoryMatch = content.match(new RegExp(`${category}:([\\s\\S]*?)(?=\\n\\n|$)`));
+            if (categoryMatch) {
+                const categoryContent = categoryMatch[1];
+                
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'recommendation-category';
+                categoryDiv.innerHTML = `
+                    <h4>${category}</h4>
+                    <div class="recommendation-list">
+                        ${formatRecommendationItems(categoryContent)}
+                    </div>
+                `;
+                
+                recommendations.appendChild(categoryDiv);
+            }
+        });
+    }
+    
+    function formatRecommendationItems(content) {
+        return content
+            .split('\n-')
+            .filter(item => item.trim())
+            .map(item => `
+                <div class="recommendation-item">
+                    <p>${item.trim()}</p>
+                </div>
+            `)
+            .join('');
+    }
+    
+    function toggleVoice() {
+        if (isVoiceActive) {
+            stopVoice();
+        } else {
+            startVoice();
+        }
+    }
+    
+    function startVoice() {
+        socket.emit('start_voice');
+    }
+    
+    function stopVoice() {
+        socket.emit('stop_voice');
+    }
+    
+    function updateVoiceUI(isActive) {
+        isVoiceActive = isActive;
+        voiceToggle.classList.toggle('active', isActive);
+        voiceIndicator.classList.toggle('listening', isActive);
+        voiceToggle.querySelector('.voice-status').textContent = isActive ? 'Stop Voice' : 'Start Voice';
     }
     
     // Socket.IO Event Handlers
@@ -89,10 +164,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     socket.on('response', (data) => {
+        if (data.voice_input) {
+            // Add the transcribed voice input to chat
+            addMessageToChat('user', data.voice_input);
+        }
+        
         if (data.is_complete && data.mbti_result) {
             // Test is complete, show results
             addMessageToChat('bot', 'Great! Your test is now complete. Here are your results...');
             showResults(data.message);
+            
+            // Stop voice input when test is complete
+            if (isVoiceActive) {
+                stopVoice();
+            }
         } else {
             // Regular message, add to chat
             addMessageToChat('bot', data.message);
@@ -102,13 +187,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    socket.on('voice_status', (data) => {
+        if (data.status === 'started') {
+            updateVoiceUI(true);
+        } else if (data.status === 'stopped' || data.status === 'error') {
+            updateVoiceUI(false);
+        }
+    });
+    
     socket.on('connect_error', (error) => {
         console.error('Connection Error:', error);
         addMessageToChat('bot', 'Sorry, there was an error connecting to the server. Please refresh the page and try again.');
+        updateVoiceUI(false);
     });
     
     socket.on('disconnect', () => {
         console.log('Disconnected from server');
         addMessageToChat('bot', 'Disconnected from server. Please refresh the page to reconnect.');
+        updateVoiceUI(false);
     });
 }); 

@@ -268,4 +268,131 @@ footer {
         width: 45px;
         height: 45px;
     }
+}
+
+/* Voice Controls */
+.chat-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+}
+
+.voice-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.voice-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.voice-button:hover {
+    background: var(--primary-color-dark);
+}
+
+.voice-button.active {
+    background: #dc3545;
+    animation: pulse 2s infinite;
+}
+
+.voice-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+    transition: all 0.3s ease;
+}
+
+.voice-indicator.listening {
+    background: #28a745;
+    animation: pulse 2s infinite;
+}
+
+.microphone-icon {
+    font-size: 1.2em;
+}
+
+/* Recommendations Section */
+.recommendations {
+    margin-top: 20px;
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recommendations h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.recommendation-category {
+    margin-bottom: 20px;
+}
+
+.recommendation-category h4 {
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.recommendation-list {
+    list-style: none;
+    padding: 0;
+}
+
+.recommendation-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: var(--bg-primary);
+    border-radius: 5px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.recommendation-item p {
+    margin: 5px 0;
+    color: var(--text-secondary);
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .chat-controls {
+        padding: 5px;
+    }
+    
+    .voice-button {
+        padding: 6px 12px;
+    }
+    
+    .recommendations {
+        padding: 15px;
+    }
 } 

@@ -21,23 +21,36 @@
                     <!-- Messages will appear here -->
                 </div>
                 
-                <div class="chat-input-container">
-                    <input type="text" id="user-input" placeholder="Type your answer here..." autocomplete="off">
-                    <button id="send-button">
-                        <span class="send-icon">→</span>
-                    </button>
+                <div class="chat-controls">
+                    <div class="voice-controls">
+                        <button id="voice-toggle" class="voice-button">
+                            <span class="microphone-icon">🎤</span>
+                            <span class="voice-status">Start Voice</span>
+                        </button>
+                        <div id="voice-indicator" class="voice-indicator"></div>
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <input type="text" id="user-input" placeholder="Type your answer here..." autocomplete="off">
+                        <button id="send-button">
+                            <span class="send-icon">→</span>
+                        </button>
+                    </div>
                 </div>
             </div>
             
             <div id="result-container" class="result-container hidden">
                 <h2>Your Results</h2>
                 <div id="mbti-result"></div>
+                <div id="recommendations" class="recommendations">
+                    <!-- Recommendations will appear here -->
+                </div>
                 <a href="/" class="restart-button">Take Test Again</a>
             </div>
         </main>
         
         <footer>
-            <p>© 2023 MBTI Personality Test | Powered by Langchain</p>
+            <p>© 2024 MBTI Personality Test | Powered by Langchain</p>
         </footer>
     </div>
 

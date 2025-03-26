@@ -1,4 +1,5 @@
 .cursorignore
 .env
 .cursor
+.cursorrules
 venv/
